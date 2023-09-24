@@ -3,27 +3,17 @@ Treehouse Techdegree:
 FSJS Project 2 - Data Pagination and Filtering
 */
 
-/*
-For assistance:
-   Check out the "Project Resources" section of the Instructions tab: https://teamtreehouse.com/projects/data-pagination-and-filtering#instructions
-   Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
-*/
-
-/*
-Create the `showPage` function
-This function will create and insert/append the elements needed to display a "page" of nine students
-*/
 
 function showPage(list, page) {
    const studentList = document.querySelector('.student-list');
    studentList.innerHTML = '';
-   let studentInfo = '';
    const startIndex = (page * 9) - 9;
    const endIndex = page * 9;
 
-   for (i = 0; i < list.length; i++) {
+   // https://teamtreehouse.com/library/practice-data-pagination/solution-display-a-specific-page
+   for (let i = 0; i < list.length; i++) {
       if (i >= startIndex && i < endIndex) {
-         studentInfo += `
+         const html = `
          <li class="student-item cf">
             <div class="student-details">
                <img class="avatar" src="${data[i].picture.large}" alt="Profile Picture">
@@ -35,21 +25,43 @@ function showPage(list, page) {
             </div>
          </li>
          `;
+         studentList.insertAdjacentHTML('beforeend', html);
       }
    }
-   studentList.insertAdjacentHTML('beforeend', studentInfo);
 }
 
-/*
-Create the `addPagination` function
-This function will create and insert/append the elements needed for the pagination buttons
-*/
 
-function addPagination() {
+let currentPage;
 
+function addPagination(list) {
+   const numberOfButtons = Math.ceil(list.length / 9);
+   const linkList = document.querySelector('.link-list');
+   linkList.innerHTML = '';
+
+   // https://teamtreehouse.com/library/practice-data-pagination/solution-adding-pagination-buttons#workspaces
+   for (let i = 1; i <= numberOfButtons; i++) {
+      const html = `
+      <li>
+         <button type = 'button'>${i}</button>
+         </li>
+      `
+      linkList.insertAdjacentHTML('beforeend', html);
+   }
+   linkList.querySelector('button').classList.add('active');
+
+   // https://teamtreehouse.com/library/practice-data-pagination/solution-trigger-page-changes
+   linkList.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') {
+         const activeButton = linkList.querySelector('.active');
+         const currentButton = e.target;
+         activeButton.classList.remove('active');
+         currentButton.classList.add('active');
+         showPage(data, currentButton.textContent);
+      }
+   });
 }
 
 
 // Call functions
 showPage(data, 1);
-addPagination();
+addPagination(data);
