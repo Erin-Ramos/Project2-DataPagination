@@ -31,8 +31,6 @@ function showPage(list, page) {
 }
 
 
-let currentPage;
-
 function addPagination(list) {
    const numberOfButtons = Math.ceil(list.length / 9);
    const linkList = document.querySelector('.link-list');
@@ -61,7 +59,21 @@ function addPagination(list) {
    });
 }
 
+function searchForm() {
+   const header = document.querySelector('.header');
+   const html = `
+      <label for = 'search' class = 'student-search'>
+         <span>Search by name</span>
+         <input id = 'search' placeholder = Search by name...'>
+         <button type = 'button'><img src = 'img/icn-search.svg' alt = 'Search icon></button>
+      </label>
+   `;
+   header.insertAdjacentHTML('beforeend', html);
+}
+
+
 
 // Call functions
 showPage(data, 1);
 addPagination(data);
+searchForm();
