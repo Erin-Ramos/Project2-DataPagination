@@ -59,21 +59,60 @@ function addPagination(list) {
    });
 }
 
-function searchForm() {
+function addSearchBar() {
    const header = document.querySelector('.header');
    const html = `
-      <label for = 'search' class = 'student-search'>
+      <label for="search" class="student-search">
          <span>Search by name</span>
-         <input id = 'search' placeholder = Search by name...'>
-         <button type = 'button'><img src = 'img/icn-search.svg' alt = 'Search icon></button>
+         <input id="search" placeholder="Search by name...">
+         <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
       </label>
    `;
    header.insertAdjacentHTML('beforeend', html);
 }
 
+/*
+When the "Search" is performed, the student data is filtered so that only students whose name includes the search value are shown.
+he search should be case-insensitive and work for partial matches. For example, if the value B or b is typed into the search field, 
+students with “Bill” in the name would be shown. Likewise, if LL were typed into the search field, students with the first name "Bill" 
+would appear, as well as students with the last name "Williams".
+
+To improve the functionality and user experience, consider adding a keyup event listener to the search input so that the list filters 
+in real-time as the user types. This should be in addition to making the search button clickable since pasting text into the search 
+bar might not trigger the keyup event.
+
+Pro Tip
+Remember you have already created a function to show nine students per page. All you really need to do here is create a new student
+list based on the search matches and then use that new list as an argument when calling the already existing function to display the students.
+*/
+
+
+function searchFunc(list) {
+   let searchResults = [];
+   const input = document.getElementById('search');
+   let inputUpper;
+
+   input.addEventListener('keyup', () => {
+      inputUpper = input.value.toUpperCase();
+
+      for (let i = 0; i < list.length; i++) {
+         const firstName = list[i].name.first.toUpperCase();
+         const lastName = list[i].name.last.toUpperCase();
+
+         if (firstName.includes(inputUpper) || lastName.includes(inputUpper)) {
+            searchResults.push(data[i]);
+            showPage(searchResults, 1);
+            console.log(inputUpper);
+            console.log(searchResults);
+            console.log(searchResults.length);
+         };
+      };
+   });
+}
 
 
 // Call functions
 showPage(data, 1);
 addPagination(data);
-searchForm();
+addSearchBar();
+searchFunc(data);
