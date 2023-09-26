@@ -42,32 +42,32 @@ the number of objects in the list and showing only 9 objects/page
 */
 function addPagination(list) {
    // get the total amount of pages
-   const numberOfButtons = Math.ceil(list.length / 9);
+   const numOfPages = Math.ceil(list.length / 9);
    // select the area of the webpage to place the pagination buttons
    const linkList = document.querySelector('.link-list');
    linkList.innerHTML = '';
 
    // for each button, display it per the format provided
-   for (let i = 1; i <= numberOfButtons; i++) {
+   for (let i = 1; i <= numOfPages; i++) {
       const html = `
       <li>
          <button type = 'button'>${i}</button>
-         </li>
+      </li>
       `
       // insert the pagination buttons
       linkList.insertAdjacentHTML('beforeend', html);
    }
    // activate the first button
-   linkList.querySelector('button').classList.add('active');
+   linkList.querySelector('button').className = 'active';
 
    // change which button is active based on which page the user is on
    linkList.addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') {
          const activeButton = linkList.querySelector('.active');
          const currentButton = e.target;
-         activeButton.classList.remove('active');
-         currentButton.classList.add('active');
-         showPage(data, currentButton.textContent);
+         activeButton.className = '';
+         currentButton.className = 'active';
+         showPage(list, currentButton.textContent);
       }
    });
 }
@@ -102,18 +102,18 @@ function searchFunc(list) {
       searchResults = [];
       // convert input to uppercase to make search case insensitive
       inputUpper = input.value.toUpperCase();
-      
+
       // loop over the data array and find objects that match the user's input in uppercase
       for (let i = 0; i < list.length; i++) {
          const fullName = `${list[i].name.first.toUpperCase()} ${list[i].name.last.toUpperCase()}`;
          if (fullName.includes(inputUpper)) {
             // push matches to a new array
             searchResults.push(list[i])
-         } 
+         }
       };
-      // confirm that their are results. if results, show page - else display no results found message
+      // confirm that there are results. if results, show page - else display no results found message
       if (searchResults.length === 0) {
-         document.querySelector('.student-list').innerHTML = `<h2>No results found</h2>`;
+         document.querySelector('.student-list').innerHTML = `<div class='no-results'>No results found<div>`;
       } else {
          showPage(searchResults, 1);
       }
