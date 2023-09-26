@@ -4,7 +4,7 @@ FSJS Project 2 - Data Pagination and Filtering
 */
 
 /* 
-take in an array of objects and a page number
+take in an array of objects and a page number -
 display 9 items per page in the provided format
 */
 function showPage(list, page) {
@@ -57,16 +57,19 @@ function addPagination(list) {
       // insert the pagination buttons
       linkList.insertAdjacentHTML('beforeend', html);
    }
-   // activate the first button
-   linkList.querySelector('button').className = 'active';
+   // activate the first button IF it exists - button will not exist if there are no search results
+   pageOneButton = linkList.querySelector('button');
+   if (pageOneButton) {
+      pageOneButton.classList.add('active');
+   }
 
    // change which button is active based on which page the user is on
    linkList.addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') {
          const activeButton = linkList.querySelector('.active');
          const currentButton = e.target;
-         activeButton.className = '';
-         currentButton.className = 'active';
+         activeButton.classList.remove('active');
+         currentButton.classList.add('active');
          showPage(list, currentButton.textContent);
       }
    });
@@ -89,7 +92,7 @@ function addSearchBar() {
 }
 
 /* 
-pull in the user's input from the search bar and the data array
+pull in the user's search input and the data array
 compare the two to find matches and display them on the page 
 */
 function searchFunc(list) {
@@ -117,10 +120,10 @@ function searchFunc(list) {
       } else {
          showPage(searchResults, 1);
       }
+      addPagination(searchResults);
    });
-   //addPagination(searchResults);
+   addPagination(list);
 }
-
 
 
 // Call functions
