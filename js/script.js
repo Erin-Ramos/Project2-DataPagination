@@ -3,51 +3,64 @@ Treehouse Techdegree:
 FSJS Project 2 - Data Pagination and Filtering
 */
 
-
+/* 
+take in an array of objects and a page number
+display 9 items per page in the provided format
+*/
 function showPage(list, page) {
+   // select the correct area of the webpage 
    const studentList = document.querySelector('.student-list');
    studentList.innerHTML = '';
+   // start and end indeces 
    const startIndex = (page * 9) - 9;
    const endIndex = page * 9;
 
-   // https://teamtreehouse.com/library/practice-data-pagination/solution-display-a-specific-page
+   // for each object in the array, display it per the format provided
    for (let i = 0; i < list.length; i++) {
       if (i >= startIndex && i < endIndex) {
          const html = `
          <li class="student-item cf">
             <div class="student-details">
-               <img class="avatar" src="${data[i].picture.large}" alt="Profile Picture">
-               <h3>${data[i].name.first} ${data[i].name.last}</h3>
-               <span class="email">${data[i].email}</span>
+               <img class="avatar" src="${list[i].picture.large}" alt="Profile Picture">
+               <h3>${list[i].name.first} ${list[i].name.last}</h3>
+               <span class="email">${list[i].email}</span>
             </div>
             <div class="joined-details">
-               <span class="date">${data[i].registered.date}</span>
+               <span class="date">${list[i].registered.date}</span>
             </div>
          </li>
          `;
+         // insert the student information into the webpage
          studentList.insertAdjacentHTML('beforeend', html);
       }
    }
 }
 
-
+/*
+add functioning page numbers to the webpage given
+the number of objects in the list and showing only 9 objects/page
+*/
 function addPagination(list) {
+   // get the total amount of pages
    const numberOfButtons = Math.ceil(list.length / 9);
+   // select the area of the webpage to place the pagination buttons
    const linkList = document.querySelector('.link-list');
    linkList.innerHTML = '';
 
-   // https://teamtreehouse.com/library/practice-data-pagination/solution-adding-pagination-buttons#workspaces
+   // for each button, display it per the format provided
    for (let i = 1; i <= numberOfButtons; i++) {
       const html = `
       <li>
          <button type = 'button'>${i}</button>
          </li>
       `
+      // insert the pagination buttons
       linkList.insertAdjacentHTML('beforeend', html);
    }
+   // activate the first button
    linkList.querySelector('button').classList.add('active');
 
-   // https://teamtreehouse.com/library/practice-data-pagination/solution-trigger-page-changes
+   // change which button is active based on which page the user is on
    linkList.addEventListener('click', (e) => {
       if (e.target.tagName === 'BUTTON') {
          const activeButton = linkList.querySelector('.active');
@@ -59,8 +72,11 @@ function addPagination(list) {
    });
 }
 
+// add a search bar 
 function addSearchBar() {
+   // select the area of the webpage to insert it
    const header = document.querySelector('.header');
+   // format the HTML
    const html = `
       <label for="search" class="student-search">
          <span>Search by name</span>
@@ -68,47 +84,43 @@ function addSearchBar() {
          <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
       </label>
    `;
+   // insert
    header.insertAdjacentHTML('beforeend', html);
 }
 
-/*
-When the "Search" is performed, the student data is filtered so that only students whose name includes the search value are shown.
-he search should be case-insensitive and work for partial matches. For example, if the value B or b is typed into the search field, 
-students with “Bill” in the name would be shown. Likewise, if LL were typed into the search field, students with the first name "Bill" 
-would appear, as well as students with the last name "Williams".
-
-To improve the functionality and user experience, consider adding a keyup event listener to the search input so that the list filters 
-in real-time as the user types. This should be in addition to making the search button clickable since pasting text into the search 
-bar might not trigger the keyup event.
-
-Pro Tip
-Remember you have already created a function to show nine students per page. All you really need to do here is create a new student
-list based on the search matches and then use that new list as an argument when calling the already existing function to display the students.
+/* 
+pull in the user's input from the search bar and the data array
+compare the two to find matches and display them on the page 
 */
-
-
 function searchFunc(list) {
-   let searchResults = [];
    const input = document.getElementById('search');
    let inputUpper;
+   let searchResults = [];
 
-   input.addEventListener('keyup', () => {
+   // input comes from keys pressed while search bar is selecteed
+   input.addEventListener('keyup', (e) => {
+      searchResults = [];
+      // convert input to uppercase to make search case insensitive
       inputUpper = input.value.toUpperCase();
-
+      
+      // loop over the data array and find objects that match the user's input in uppercase
       for (let i = 0; i < list.length; i++) {
-         const firstName = list[i].name.first.toUpperCase();
-         const lastName = list[i].name.last.toUpperCase();
-
-         if (firstName.includes(inputUpper) || lastName.includes(inputUpper)) {
-            searchResults.push(data[i]);
-            showPage(searchResults, 1);
-            console.log(inputUpper);
-            console.log(searchResults);
-            console.log(searchResults.length);
-         };
+         const fullName = `${list[i].name.first.toUpperCase()} ${list[i].name.last.toUpperCase()}`;
+         if (fullName.includes(inputUpper)) {
+            // push matches to a new array
+            searchResults.push(list[i])
+         } 
       };
+      // confirm that their are results. if results, show page - else display no results found message
+      if (searchResults.length === 0) {
+         document.querySelector('.student-list').innerHTML = `<h2>No results found</h2>`;
+      } else {
+         showPage(searchResults, 1);
+      }
    });
+   //addPagination(searchResults);
 }
+
 
 
 // Call functions
